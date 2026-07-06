@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yenb Shop</title>
+<style>
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: #0b0b12;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  a { text-decoration: none; color: inherit; }
+
+  /* HEADER */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 40px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    position: sticky;
+    top: 0;
+    background: #0b0b12;
+    z-index: 10;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo img { height: 44px; }
+  .logo span { font-size: 18px; font-weight: bold; }
+
+  nav a {
+    margin-left: 25px;
+    font-size: 15px;
+    color: #ddd;
+  }
+  nav a:hover { color: #fff; }
+
+  .header-icons {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    font-size: 14px;
+    color: #ddd;
+  }
+
+  /* MAIN */
+  main { padding: 50px 40px 20px; }
+
+  h1 {
+    text-align: center;
+    margin: 0 0 40px;
+    font-size: 28px;
+  }
+
+  .categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .category {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px;
+    padding: 18px;
+    text-align: center;
+    transition: transform .2s ease, border-color .2s ease;
+  }
+
+  .category:hover {
+    transform: translateY(-4px);
+    border-color: rgba(168,85,247,0.5);
+  }
+
+  .category img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-radius: 14px;
+    margin-bottom: 12px;
+  }
+
+  .category h2 {
+    font-size: 15px;
+    margin: 0;
+    font-weight: 700;
+  }
+
+  .category .count {
+    color: rgba(255,255,255,0.4);
+    font-weight: 400;
+  }
+
+  /* FOOTER */
+  footer {
+    background: #000;
+    color: #fff;
+    padding: 50px 40px 20px;
+    margin-top: 60px;
+  }
+
+  .footer-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+  }
+
+  .footer-col h3 {
+    font-size: 18px;
+    margin: 0 0 15px;
+  }
+
+  .footer-col a {
+    display: block;
+    margin-bottom: 10px;
+    color: #ddd;
+    font-size: 14px;
+  }
+  .footer-col a:hover { color: #fff; }
+
+  .copyright {
+    text-align: center;
+    padding-top: 30px;
+    margin-top: 30px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.5);
+    font-size: 13px;
+  }
+
+  @media (max-width: 700px) {
+    .footer-grid { grid-template-columns: 1fr; }
+    header { padding: 14px 20px; }
+    main { padding: 30px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">
+    <img src="logo.png" alt="Yenb Shop">
+    <span>Yenb Shop</span>
+  </a>
+  <nav>
+    <a href="index.html">Accueil</a>
+    <a href="shop.html">Boutique</a>
+  </nav>
+  <div class="header-icons">
+    <a href="account.html">Connexion</a>
+    <a href="cart.html">Panier (0)</a>
+  </div>
+</header>
+
+<main>
+  <h1>Boutique</h1>
+  <div class="categories">
+
+    <a href="#" class="category">
+      <img src="https://yenbshop.com/wp-content/uploads/2026/07/APEX-500x500.png" alt="Apex Legends">
+      <h2>Apex Legends <span class="count">(1)</span></h2>
+    </a>
+
+    <a href="#" class="category">
+      <img src="https://yenbshop.com/wp-content/uploads/2026/07/CALL-OF-DUTY-500x500.png" alt="Call of Duty">
+      <h2>Call Of Duty - MW3/BO6/WZ <span class="count">(1)</span></h2>
+    </a>
+
+    <a href="#" class="category">
+      <img src="https://yenbshop.com/wp-content/uploads/2026/07/FIVEM-500x500.png" alt="FiveM">
+      <h2>FiveM <span class="count">(14)</span></h2>
+    </a>
+
+    <a href="#" class="category">
+      <img src="https://yenbshop.com/wp-content/uploads/2026/07/FORTNITE-500x500.png" alt="Fortnite">
+      <h2>Fortnite <span class="count">(2)</span></h2>
+    </a>
+
+    <a href="#" class="category">
+      <img src="https://yenbshop.com/wp-content/uploads/2026/07/ROBLOX-500x500.png" alt="Roblox">
+      <h2>Roblox <span class="count">(1)</span></h2>
+    </a>
+
+    <a href="#" class="category">
+      <img src="https://yenbshop.com/wp-content/uploads/2026/07/RUST-500x500.png" alt="Rust">
+      <h2>Rust <span class="count">(1)</span></h2>
+    </a>
+
+  </div>
+</main>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <h3>Contact</h3>
+      <a href="https://discord.gg/yenb" target="_blank">Discord</a>
+      <a href="mailto:support@yenbshop.com">support@yenbshop.com</a>
+    </div>
+    <div class="footer-col">
+      <h3>Pages</h3>
+      <a href="shop.html">Boutique</a>
+      <a href="privacy-policy.html">Politique de confidentialité</a>
+      <a href="refund-policy.html">Politique de remboursement</a>
+      <a href="terms.html">Conditions d'utilisation</a>
+    </div>
+    <div class="footer-col">
+      <h3>Catégories</h3>
+      <a href="#">FiveM</a>
+      <a href="#">Fortnite</a>
+      <a href="#">Call of Duty</a>
+      <a href="#">Rust</a>
+      <a href="#">Roblox</a>
+      <a href="#">Apex Legends</a>
+    </div>
+  </div>
+  <div class="copyright">
+    Copyright © 2026 - Yenb Shop | YENB SHOP est géré par ELIZ TECH
+  </div>
+</footer>
+
+</body>
+</html>
