@@ -1,21 +1,5 @@
-/* ==========================================================================
-   Bloommenu.fr — Cart engine (front-end simulation)
-   --------------------------------------------------------------------------
-   This is a client-side cart stored in localStorage. It lets the static
-   site have a working Panier / Checkout flow (add, update qty, remove,
-   coupon, place order) without a real backend server.
-
-   To go live for real payments you still need:
-   - A real backend (Node/PHP/etc.) or WooCommerce REST API
-   - A payment processor (Stripe, PayPal...) wired to that backend
-   ========================================================================== */
-
 (function (window) {
   const CART_KEY = "bloommenu_cart";
-  const COUPONS = {
-    "BLOOM10": 0.10,
-    "WELCOME10": 0.10
-  };
 
   function getCart() {
     try {
@@ -81,42 +65,9 @@
     return getCart().reduce((sum, i) => sum + i.qty * i.price, 0);
   }
 
-  function getAppliedCoupon() {
-    try {
-      return sessionStorage.getItem("bloommenu_coupon") || null;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  function applyCoupon(code) {
-    const normalized = (code || "").trim().toUpperCase();
-    if (COUPONS.hasOwnProperty(normalized)) {
-      try {
-        sessionStorage.setItem("bloommenu_coupon", normalized);
-      } catch (e) {}
-      return { ok: true, discount: COUPONS[normalized], code: normalized };
-    }
-    return { ok: false };
-  }
-
-  function removeCoupon() {
-    try {
-      sessionStorage.removeItem("bloommenu_coupon");
-    } catch (e) {}
-  }
-
-  function getDiscountRate() {
-    const code = getAppliedCoupon();
-    return code && COUPONS.hasOwnProperty(code) ? COUPONS[code] : 0;
-  }
-
   function getTotals() {
     const subtotal = getSubtotal();
-    const rate = getDiscountRate();
-    const discount = subtotal * rate;
-    const total = Math.max(subtotal - discount, 0);
-    return { subtotal, discount, total, rate };
+    return { subtotal, total: subtotal };
   }
 
   function formatPrice(n) {
@@ -141,13 +92,11 @@
       items: cart,
       totals: totals
     };
-    // Front-end simulation only — a real store would POST this to a server.
     console.log("Order placed (simulated):", order);
     try {
       localStorage.setItem("bloommenu_last_order", JSON.stringify(order));
     } catch (e) {}
     clearCart();
-    removeCoupon();
     return order;
   }
 
@@ -161,9 +110,6 @@
     getCartCount,
     getSubtotal,
     getTotals,
-    applyCoupon,
-    removeCoupon,
-    getAppliedCoupon,
     formatPrice,
     updateCartBadges,
     placeOrder
