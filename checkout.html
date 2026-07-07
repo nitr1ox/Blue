@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checkout - Bloommenu.fr</title>
+<style>
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: #0b0b12;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  a { text-decoration: none; color: inherit; }
+
+  /* HEADER */
+  header {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 16px 40px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    position: sticky;
+    top: 0;
+    background: rgba(11,11,18,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 10;
+  }
+
+  .logo { display: flex; align-items: center; gap: 12px; justify-self: center; }
+  .logo img { height: 56px; width: auto; }
+
+  nav {
+    justify-self: start;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 999px;
+    padding: 5px;
+  }
+  nav a { padding: 8px 18px; border-radius: 999px; font-size: 14.5px; color: #ccc; font-weight: 600; }
+  nav a:hover { color: #fff; }
+
+  .header-icons { display: flex; align-items: center; gap: 20px; justify-self: end; }
+  .icon-link {
+    display: flex; align-items: center; justify-content: center; position: relative;
+    width: 38px; height: 38px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.15); color: #ddd;
+  }
+  .icon-link svg { width: 17px; height: 17px; flex-shrink: 0; }
+  .cart-badge {
+    position: absolute; top: -4px; right: -4px; display: none;
+    align-items: center; justify-content: center; min-width: 16px; height: 16px;
+    padding: 0 4px; border-radius: 50px; background: #3b82f6; color: #fff;
+    font-size: 10px; font-weight: 700;
+  }
+
+  /* MAIN */
+  main { padding: 50px 40px 20px; max-width: 1100px; margin: 0 auto; }
+  h1 { text-align: center; margin: 0 0 8px; font-size: 32px; font-weight: 800; letter-spacing: -.02em; }
+  .subtitle { text-align: center; color: rgba(255,255,255,0.45); font-size: 14px; margin: 0 0 40px; }
+
+  .checkout-layout { display: grid; grid-template-columns: 1fr 380px; gap: 28px; align-items: start; }
+  @media (max-width: 900px) { .checkout-layout { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 26px;
+  }
+  .panel h2 { margin: 0 0 20px; font-size: 18px; font-weight: 800; }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-row { display: flex; flex-direction: column; gap: 6px; }
+  .form-row.full { grid-column: 1 / -1; }
+  .form-row label { font-size: 12.5px; font-weight: 700; color: rgba(255,255,255,0.75); }
+  .form-row input {
+    padding: 12px 14px; border-radius: 10px;
+    background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.12);
+    color: #fff; font-size: 14px;
+  }
+  .form-row input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.2); }
+  .form-row .error { font-size: 11.5px; color: #f87171; min-height: 14px; }
+
+  .payment-methods { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
+  .payment-option {
+    display: flex; align-items: center; gap: 10px; padding: 13px 14px;
+    border-radius: 12px; background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1); cursor: pointer; font-size: 14px; font-weight: 600;
+  }
+  .payment-option.active { border-color: rgba(59,130,246,0.5); background: rgba(59,130,246,0.1); }
+  .payment-option input { accent-color: #3b82f6; width: 16px; height: 16px; }
+
+  /* Summary */
+  .summary-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+  .summary-item { display: flex; align-items: center; gap: 10px; font-size: 13.5px; }
+  .summary-item img { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; border: 1px solid rgba(59,130,246,0.3); }
+  .summary-item .meta { flex: 1; }
+  .summary-item .qty { color: rgba(255,255,255,0.5); font-size: 12px; }
+  .summary-item .price { font-weight: 700; color: #60a5fa; }
+
+  .summary-row { display: flex; justify-content: space-between; font-size: 14px; padding: 7px 0; color: rgba(255,255,255,0.8); }
+  .summary-row.total { font-size: 18px; font-weight: 800; color: #fff; border-top: 1px solid rgba(255,255,255,0.12); margin-top: 6px; padding-top: 14px; }
+  .summary-row.discount { color: #4ade80; }
+
+  .place-order-btn {
+    display: block; width: 100%; text-align: center; padding: 15px;
+    margin-top: 18px; border-radius: 13px; border: none;
+    background: linear-gradient(135deg,#3b82f6,#1d4ed8);
+    color: #fff; font-weight: 800; font-size: 15px; cursor: pointer;
+    box-shadow: 0 14px 34px rgba(59,130,246,0.35);
+    transition: transform .2s ease;
+  }
+  .place-order-btn:hover { transform: translateY(-2px); }
+  .place-order-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+  .secure-note { text-align: center; font-size: 11.5px; color: rgba(255,255,255,0.4); margin-top: 10px; }
+
+  /* Success screen */
+  .success-panel { text-align: center; padding: 70px 30px; }
+  .success-icon {
+    width: 84px; height: 84px; margin: 0 auto 22px; border-radius: 50%;
+    background: rgba(34,197,94,0.15); color: #22c55e;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .success-icon svg { width: 42px; height: 42px; }
+  .success-panel h2 { font-size: 26px; margin: 0 0 10px; }
+  .success-panel p { color: rgba(255,255,255,0.55); margin: 0 0 6px; }
+  .order-id { display: inline-block; margin: 14px 0 26px; padding: 8px 16px; border-radius: 10px; background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.3); font-weight: 800; color: #93c5fd; }
+  .success-panel a.button {
+    display: inline-block; padding: 13px 26px; border-radius: 12px;
+    background: linear-gradient(135deg,#3b82f6,#1d4ed8); font-weight: 700;
+  }
+
+  .cart-empty { text-align: center; padding: 70px 20px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; }
+  .cart-empty a { display: inline-block; margin-top: 18px; padding: 12px 24px; border-radius: 12px; background: linear-gradient(135deg,#3b82f6,#1d4ed8); font-weight: 700; }
+
+  footer { background: #000; color: #fff; padding: 50px 40px 20px; margin-top: 60px; }
+  .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+  .footer-col h3 { font-size: 18px; margin: 0 0 15px; font-weight: 700; }
+  .footer-col a { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; color: #ddd; font-size: 14.5px; }
+  .footer-col a:hover { color: #fff; }
+  .footer-col a svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .copyright { text-align: center; padding-top: 30px; margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); font-size: 13px; }
+
+  @media (max-width: 700px) {
+    .footer-grid { grid-template-columns: 1fr; }
+    header { padding: 14px 20px; }
+    main { padding: 30px 20px; }
+    .form-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo"><img src="logo.webp" alt="Bloommenu.fr"></a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+  </nav>
+  <div class="header-icons">
+    <a href="cart.html" class="icon-link" aria-label="Shopping cart">
+      <svg viewBox="0 0 15 15" fill="currentColor" aria-hidden="true"><path d="M14.1,1.6C14,0.7,13.3,0,12.4,0H2.7C1.7,0,1,0.7,0.9,1.6L0.1,13.1c0,0.5,0.1,1,0.5,1.3C0.9,14.8,1.3,15,1.8,15h11.4c0.5,0,0.9-0.2,1.3-0.6c0.3-0.4,0.5-0.8,0.5-1.3L14.1,1.6zM13.4,13.4c0,0-0.1,0.1-0.2,0.1H1.8c-0.1,0-0.2-0.1-0.2-0.1c0,0-0.1-0.1-0.1-0.2L2.4,1.7c0-0.1,0.1-0.2,0.2-0.2h9.7c0.1,0,0.2,0.1,0.2,0.2l0.8,11.5C13.4,13.3,13.4,13.4,13.4,13.4z M10,3.2C9.6,3.2,9.2,3.6,9.2,4v1.5c0,1-0.8,1.8-1.8,1.8S5.8,6.5,5.8,5.5V4c0-0.4-0.3-0.8-0.8-0.8S4.2,3.6,4.2,4v1.5c0,1.8,1.5,3.2,3.2,3.2s3.2-1.5,3.2-3.2V4C10.8,3.6,10.4,3.2,10,3.2z"/></svg>
+      <span class="cart-badge">0</span>
+    </a>
+  </div>
+</header>
+
+<main>
+  <h1>Checkout</h1>
+  <p class="subtitle">Dernière étape avant de recevoir ton produit</p>
+  <div id="checkout-root"></div>
+</main>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <h3>Contact</h3>
+      <a href="https://discord.gg/bloommenu" target="_blank" rel="noopener noreferrer">Discord</a>
+      <a href="mailto:support@bloommenu.fr">support@bloommenu.fr</a>
+    </div>
+    <div class="footer-col">
+      <h3>Pages</h3>
+      <a href="shop.html">Boutique</a>
+      <a href="privacy-policy.html">Politique de confidentialité</a>
+      <a href="refund-policy.html">Politique de remboursement</a>
+      <a href="terms.html">Conditions d'utilisation</a>
+    </div>
+    <div class="footer-col">
+      <h3>Catégories</h3>
+      <a href="#">FiveM</a>
+      <a href="#">Fortnite</a>
+      <a href="#">Call of Duty</a>
+      <a href="#">Rust</a>
+    </div>
+  </div>
+  <div class="copyright">Copyright © 2026 - Bloommenu.fr | BLOOMMENU.FR est géré par NITROX</div>
+</footer>
+
+<script src="cart.js"></script>
+<script>
+  const root = document.getElementById("checkout-root");
+  let selectedPayment = "card";
+
+  function renderSummary() {
+    const cart = BloommenuCart.getCart();
+    const totals = BloommenuCart.getTotals();
+    const coupon = BloommenuCart.getAppliedCoupon();
+
+    const itemsHtml = cart.map((item) => `
+      <div class="summary-item">
+        <img src="${item.image}" alt="${item.name}">
+        <div class="meta">
+          <div>${item.name}</div>
+          <div class="qty">Qté ${item.qty}</div>
+        </div>
+        <div class="price">${BloommenuCart.formatPrice(item.price * item.qty)}</div>
+      </div>
+    `).join("");
+
+    return `
+      <div class="panel">
+        <h2>Récapitulatif de commande</h2>
+        <div class="summary-list">${itemsHtml}</div>
+        <div class="summary-row"><span>Sous-total</span><span>${BloommenuCart.formatPrice(totals.subtotal)}</span></div>
+        ${totals.discount > 0 ? `<div class="summary-row discount"><span>Réduction (${coupon})</span><span>-${BloommenuCart.formatPrice(totals.discount)}</span></div>` : ""}
+        <div class="summary-row total"><span>Total</span><span>${BloommenuCart.formatPrice(totals.total)}</span></div>
+        <button class="place-order-btn" id="place-order-btn">Confirmer la commande</button>
+        <p class="secure-note">🔒 Paiement sécurisé — simulation front-end</p>
+      </div>
+    `;
+  }
+
+  function render() {
+    const cart = BloommenuCart.getCart();
+
+    if (cart.length === 0) {
+      root.innerHTML = `
+        <div class="cart-empty">
+          <h2>Ton panier est vide</h2>
+          <p>Ajoute des produits avant de passer commande.</p>
+          <a href="shop.html">Voir la boutique</a>
+        </div>`;
+      return;
+    }
+
+    root.innerHTML = `
+      <div class="checkout-layout">
+        <div class="panel">
+          <h2>Informations de livraison</h2>
+          <form id="checkout-form">
+            <div class="form-grid">
+              <div class="form-row">
+                <label for="firstname">Prénom</label>
+                <input type="text" id="firstname" required>
+                <span class="error" data-error-for="firstname"></span>
+              </div>
+              <div class="form-row">
+                <label for="lastname">Nom</label>
+                <input type="text" id="lastname" required>
+                <span class="error" data-error-for="lastname"></span>
+              </div>
+              <div class="form-row full">
+                <label for="email">Adresse email</label>
+                <input type="email" id="email" required>
+                <span class="error" data-error-for="email"></span>
+              </div>
+              <div class="form-row full">
+                <label for="discord">Discord (pour la livraison du produit)</label>
+                <input type="text" id="discord" placeholder="pseudo#0000" required>
+                <span class="error" data-error-for="discord"></span>
+              </div>
+            </div>
+
+            <h2 style="margin-top:26px">Méthode de paiement</h2>
+            <div class="payment-methods">
+              <label class="payment-option active" data-method="card">
+                <input type="radio" name="payment" value="card" checked> Carte bancaire (Visa / Mastercard)
+              </label>
+              <label class="payment-option" data-method="paypal">
+                <input type="radio" name="payment" value="paypal"> PayPal
+              </label>
+              <label class="payment-option" data-method="crypto">
+                <input type="radio" name="payment" value="crypto"> Crypto (BTC / USDT)
+              </label>
+            </div>
+          </form>
+        </div>
+        ${renderSummary()}
+      </div>
+    `;
+
+    root.querySelectorAll(".payment-option").forEach((el) => {
+      el.addEventListener("click", () => {
+        root.querySelectorAll(".payment-option").forEach((o) => o.classList.remove("active"));
+        el.classList.add("active");
+        selectedPayment = el.dataset.method;
+      });
+    });
+
+    document.getElementById("place-order-btn").addEventListener("click", () => {
+      const fields = ["firstname", "lastname", "email", "discord"];
+      let valid = true;
+      const values = {};
+
+      fields.forEach((id) => {
+        const input = document.getElementById(id);
+        const errorEl = document.querySelector(`[data-error-for="${id}"]`);
+        values[id] = input.value.trim();
+        if (!values[id]) {
+          errorEl.textContent = "Ce champ est requis.";
+          valid = false;
+        } else if (id === "email" && !/^\S+@\S+\.\S+$/.test(values[id])) {
+          errorEl.textContent = "Email invalide.";
+          valid = false;
+        } else {
+          errorEl.textContent = "";
+        }
+      });
+
+      if (!valid) return;
+
+      const order = BloommenuCart.placeOrder({ ...values, payment: selectedPayment });
+      renderSuccess(order);
+    });
+  }
+
+  function renderSuccess(order) {
+    root.innerHTML = `
+      <div class="panel success-panel">
+        <div class="success-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+        </div>
+        <h2>Commande confirmée !</h2>
+        <p>Un email de confirmation a été envoyé à ${order.customer.email}.</p>
+        <p>Ton produit sera livré sur Discord : <strong>${order.customer.discord}</strong></p>
+        <div class="order-id">Commande ${order.id}</div>
+        <div>
+          <a href="index.html" class="button">Retour à l'accueil</a>
+        </div>
+      </div>
+    `;
+  }
+
+  render();
+</script>
+
+</body>
+</html>
